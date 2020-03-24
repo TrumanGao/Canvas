@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>阴影</title>
+	</head>
+	<body>
+		<canvas id="canvas" width="800" height="500"></canvas>
+		<script type="text/javascript">
+			const canvas = document.getElementById("canvas")
+			canvas.style.border = "1px solid black"
+			const ctx = canvas.getContext("2d")
+
+			ctx.fillStyle = 'aquamarine'
+			ctx.shadowBlur = 10 // 模糊级别
+			ctx.shadowColor = '#E3A3B2'
+			ctx.shadowOffsetX = 10
+			ctx.shadowOffsetY = 10
+			ctx.fillRect(100, 100, 100, 100)
+
+			ctx.shadowBlur = 0
+			ctx.shadowOffsetX = -10
+			ctx.shadowOffsetY = -10
+			ctx.fillStyle = 'brown'
+			ctx.arc(500, 100, 20, 0, 2 * Math.PI)
+			ctx.fill()
+		</script>
+	</body>
+</html>

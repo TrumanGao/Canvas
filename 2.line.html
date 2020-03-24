@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>画参考线</title>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+		<script type="text/javascript">
+			(function() {
+				// 1. 获取canvas并设置宽高边框
+				const canvas = document.getElementById('canvas')
+				canvas.width = 500
+				canvas.height = 300
+				canvas.style.border = '1px solid #3e3e3e'
+
+				// 2. 获取canvas上下文对象
+				const ctx = canvas.getContext('2d')
+
+				// 3. 绘制表格
+				const rectHeight = 20 // 设置格子高度
+				const rectWidth = 20 // 设置格子高度
+				ctx.lineWidth = 0.3
+				for (let i = 0; i < canvas.height / rectHeight; i++) { // 把画布高度按照格子高度均分，画横线
+					ctx.moveTo(0, i * rectHeight) // 横坐标0，纵坐标每次下移一格
+					ctx.lineTo(canvas.width, i * rectHeight)
+					ctx.strokeStyle = '#333333'
+				}
+				ctx.stroke()
+
+				ctx.beginPath() // 重新设置另一个画笔，否则只有最后一个样式生效
+
+				for (let i = 0; i < canvas.width / rectWidth; i++) { // 把画布宽度按照格子宽度均分，画纵线
+					ctx.moveTo(i * rectWidth, 0)
+					ctx.lineTo(i * rectWidth, canvas.height)
+					ctx.strokeStyle = 'red'
+				}
+				ctx.stroke()
+			})()
+		</script>
+	</body>
+</html>

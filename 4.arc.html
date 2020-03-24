@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>画圆</title>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="400"></canvas>
+		<script type="text/javascript">
+			const canvas = document.getElementById('canvas')
+			canvas.style.border = "1px solid black"
+			const ctx = canvas.getContext('2d')
+
+			ctx.moveTo(200, 200) // 绘制圆心点，用于闭合至圆心处
+			// 画圆参数：圆心x坐标，圆心y坐标，半径，起点弧度，终点弧度，逆时针（默认false）
+			// 注：弧度 = 角度对应的弧长 / 半径，即 rad = (angle / 180) * Math.PI
+			ctx.arc(200, 200, 100, Math.PI, (180 + 45) / 180 * Math.PI, true)
+			// 描边闭合
+			ctx.closePath()
+			ctx.stroke()
+
+			ctx.beginPath() // 重新画圆
+
+			ctx.moveTo(450, 200) // 绘制圆心点，用于闭合至圆心处
+			ctx.arc(450, 200, 100, 45 / 180 * Math.PI, (180 + 75) / 180 * Math.PI)
+			// 填充闭合
+			ctx.fill()
+
+			// 扇形图
+			function paintArc(x, y, r, sdeg, edeg, bool, style) {
+				ctx.beginPath()
+				ctx.moveTo(x, y)
+				ctx.arc(x, y, r, sdeg / 180 * Math.PI, edeg / 180 * Math.PI, bool)
+				ctx.fillStyle = style
+				ctx.fill()
+			}
+			paintArc(750, 200, 100, -90, 45, false, 'red')
+			paintArc(750, 200, 100, 45, 79, false, 'orange')
+			paintArc(750, 200, 100, 79, 155, false, 'yellow')
+			paintArc(750, 200, 100, 155, 162, false, 'green')
+			paintArc(750, 200, 100, 162, 215, false, 'blue')
+			paintArc(750, 200, 100, 215, 225, false, 'violet')
+			paintArc(750, 200, 100, 225, 270, false, 'purple')
+		</script>
+	</body>
+</html>

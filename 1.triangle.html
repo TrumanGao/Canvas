@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>画三角形</title>
+	</head>
+	<body>
+		<!-- IE9以上支持，IE9以下显示为div -->
+		<!-- canvas用属性设置宽高，不要用css设置 -->
+		<div id="title">
+			canvas
+		</div>
+		<canvas id="canvas" width="800" height="500"></canvas>
+		
+		<script type="text/javascript">
+			// 1. 获取canvas标签
+			const canvas = document.getElementById('canvas')
+			
+			// 2. 获取canvas上下文
+			const ctx = canvas.getContext('2d') // 2D canvas
+			// const context = canvas.getContext('webgl') // 3D canvas
+			
+			// 3. 绘制
+			ctx.moveTo(100, 100) // 定位画笔起点
+			
+			ctx.lineTo(200, 100) // 画直线，定位第一笔终点
+			ctx.lineTo(100, 200) // 画直线，定位第二笔终点
+			
+			ctx.closePath(100, 100) // 闭合路径，画到起点
+			
+			ctx.lineWidth = 4 // 描边宽度，单位px
+			ctx.strokeStyle = '#9f2a22' // 设置描边颜色，支持单词，rgb, rgba, 十六进制
+			ctx.stroke() // 描边
+			
+			ctx.fillStyle = '#E3A3B2' // 填充颜色
+			ctx.fill() // 填充已经画好的闭合图形
+			
+		</script>
+	</body>
+</html>

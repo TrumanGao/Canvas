@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>事件</title>
+		<style type="text/css">
+			body {
+				margin: 0;
+			}
+
+			#btn-wrap {
+				width: 500px;
+				margin-top: 10px;
+				display: flex;
+				justify-content: space-around;
+			}
+
+			#clear-btn,
+			#save-btn {
+				width: 100px;
+				height: 40px;
+				border-radius: 10px;
+				background-color: darkred;
+				color: white;
+				box-shadow: none;
+				border: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="300"></canvas>
+		<div id="btn-wrap">
+			<button id="clear-btn" type="button">清空画布</button>
+			<button id="save-btn" type="button">保存图片</button>
+		</div>
+		<script type="text/javascript">
+			const canvas = document.getElementById("canvas")
+			canvas.style.border = "1px solid black"
+			const ctx = canvas.getContext("2d")
+
+			function setBackground() { // 设置背景为白色，否则jpeg图片背景黑色，png图片背景透明
+				ctx.fillStyle = '#fff'
+				ctx.fillRect(0, 0, canvas.width, canvas.height)
+			}
+			setBackground()
+
+			let count = 0 // 事件触发次数用于区分单击/双击/拖动
+			let timer // 定时器用于区分单击/双击/拖动
+			let msec = 200 // 定时器时间间隔
+			let isMove = false // 是否是拖动操作
+
+			let lastX // 上一个点的x坐标
+			let lastY // 上一个点的y坐标
+
+			// 1. 按下鼠标
+			canvas.addEventListener('mousedown', mouseDown)
+
+			function mouseDown(e) {
+				console.log('按下鼠标', e)
+				isMove = true // 开始监听拖动事件
+
+				lastX = e.offsetX // 第一个点的x坐标
+				lastY = e.offsetY // 第一个点的y坐标
+			}
+
+			// 2. 移动鼠标
+			canvas.addEventListener('mousemove', mouseMove)
+
+			function mouseMove(e) {
+				if (!isMove) return
+				console.log('移动鼠标', e)
+				count += 2 // 每次加2，防止移动一次误判为双击
+				const x = e.offsetX // 点击位置在画布中的x坐标
+				const y = e.offsetY // 点击位置在画布中的y坐标
+				const pageX = e.pageX // 点击位置相对于整个页面的x坐标
+				const pageY = e.pageY // 点击位置相对于整个页面的y坐标
+				createPoint(x, y)
+				lastX = x
+				lastY = y
+			}
+
+			// 3. 松开鼠标，判断拖动/单击/双击事件
+			canvas.addEventListener('mouseup', mouseUp)
+
+			function mouseUp(e) {
+				isMove = false // 停止监听拖动事件
+				count++
+				timer = setTimeout(() => {
+					if (count == 1) {
+						console.log("画布单击事件", e);
+						const x = e.offsetX // 点击位置在画布中的x坐标
+						const y = e.offsetY // 点击位置在画布中的y坐标
+						const pageX = e.pageX // 点击位置相对于整个页面的x坐标
+						const pageY = e.pageY // 点击位置相对于整个页面的y坐标
+						createPoint(x, y)
+						count = 0
+					} else if (count == 2) {
+						console.log("画布双击事件", e);
+						const x = e.offsetX // 点击位置在画布中的x坐标
+						const y = e.offsetY // 点击位置在画布中的y坐标
+						const pageX = e.pageX // 点击位置相对于整个页面的x坐标
+						const pageY = e.pageY // 点击位置相对于整个页面的y坐标
+						clearPoint(x, y)
+						count = 0
+					} else {
+						console.log('画布拖动事件', count)
+						count = 0
+						clearTimeout(timer)
+					}
+				}, msec)
+			}
+
+			function createPoint(x, y) { // 画点
+				console.log('上一个点', lastX, lastY)
+				console.log('新画点', x, y)
+				ctx.beginPath()
+
+				ctx.lineCap = "round" // 平滑
+				ctx.strokeStyle = '#333333'
+				ctx.lineWidth = 5
+				ctx.moveTo(lastX, lastY)
+				ctx.lineTo(x, y);
+				ctx.stroke();
+				clearTimeout(timer)
+			}
+
+			function clearPoint(x, y) { // 删除点
+				console.log('清除点', x, y)
+				ctx.clearRect(x - 15, y - 15, 30, 30)
+				clearTimeout(timer)
+			}
+
+			// 5. 清空画布
+			const clearBtn = document.getElementById('clear-btn')
+
+			clearBtn.addEventListener('click', clearCanvas)
+
+			function clearCanvas() {
+				console.log("清空画布", canvas)
+				ctx.clearRect(0, 0, canvas.width, canvas.height)
+				setBackground()
+			}
+
+
+			// 6. 保存图片
+			const saveBtn = document.getElementById('save-btn')
+
+			saveBtn.addEventListener('click', saveCanvas)
+
+			function saveCanvas() {
+				console.log("保存画布", canvas)
+				// 参数1：图片格式，默认为 PNG 格式
+				// 参数2：图片分辨率，默认为96dpi。当图片格式为 image/jpeg 或 image/webp，取值0-1，超出设置为 0.92
+				const base64 = canvas.toDataURL("image/jpeg", 1) // jpeg默认生成图片黑色背景
+				console.log("base64字符串", base64)
+
+				const a = document.createElement('a') // 在内存中创建a标签，用于下载图片
+				a.href = base64
+				a.download = "生成签名" // 只有 Firefox 和 Chrome 支持 download 属性
+				a.click()
+			}
+		</script>
+	</body>
+</html>

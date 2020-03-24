@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="300"></canvas>
+		<script type="text/javascript">
+			const canvas = document.getElementById('canvas')
+			const ctx = canvas.getContext('2d')
+			
+			ctx.font = "30px '微软雅黑'"
+			ctx.textBaseline = 'bottom'
+			ctx.textAlign = 'left'
+			ctx.fillText('我是实心文字', 150, 50)
+			ctx.strokeText('我是空心文字', 150, 100)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>帧动画</title>
+	</head>
+	<body>
+		<canvas id="canvas" width="400" height="300"></canvas>
+		<button class="start-btn" type="button">重新吃</button>
+		<button class="end-btn" type="button">不吃了</button>
+		<button class="pause-btn" type="button">歇一歇</button>
+		<button class="continue-btn" type="button">继续吃</button>
+		<script type="text/javascript">
+			const canvas = document.getElementById("canvas")
+			canvas.style.border = "1px solid black"
+			const ctx = canvas.getContext("2d")
+
+			const img = new Image() // 创建图片对象
+			let timer // 定时器标识符
+			let millisec = 300 // 执行时间间隔
+			let colIndex = 0 // 列数
+			let rowIndex = 0 // 行数
+			const timerFun = () => { // 声明定时器执行函数
+				console.log("设置定时器");
+				ctx.clearRect(0, 0, canvas.style.width, canvas.style.height)
+
+				if (rowIndex < 3) { // 如果是前5帧
+					ctx.drawImage(img, colIndex * 240, rowIndex * 240, 200, 200, 50, 50, 200, 200) // 图片对象，x坐标，y坐标（注：图片上定位的坐标），width，height（图片上截取的大小），x坐标，y坐标（注：图片在画布上的起点，即左上角），width，height（缩放，不是裁剪）
+					colIndex++ // 下一帧
+
+					if (colIndex > 4) {
+						colIndex = 0
+						rowIndex++
+					}
+				} else {
+					colIndex = 0
+					rowIndex = 0
+				}
+			}
+
+			img.onload = () => {
+				timer = setInterval(timerFun, millisec)
+			}
+			img.src = "image/apple.jpg"
+
+			const startBtn = document.getElementsByClassName('start-btn')[0]
+			const endBtn = document.getElementsByClassName('end-btn')[0]
+			const pauseBtn = document.getElementsByClassName('pause-btn')[0]
+			const continueBtn = document.getElementsByClassName('continue-btn')[0]
+
+			startBtn.addEventListener('click', () => {
+				console.log("点击开始", timer)
+				clearInterval(timer)
+				colIndex = 0 // 列数
+				rowIndex = 0 // 行数
+				timer = setInterval(timerFun, millisec)
+			})
+			endBtn.addEventListener('click', () => {
+				console.log("点击结束", timer)
+				clearInterval(timer)
+				colIndex = 0
+				rowIndex = 0
+				ctx.drawImage(img, colIndex * 240, rowIndex * 240, 200, 200, 50, 50, 200, 200)
+				timer = 0
+			})
+			pauseBtn.addEventListener('click', () => {
+				console.log("点击暂停", timer)
+				clearInterval(timer)
+				timer = 0
+			})
+			continueBtn.addEventListener('click', () => {
+				if (timer) {
+					alert('吃着呢，别催')
+					return
+				}
+				console.log("点击继续", timer)
+				timer = setInterval(timerFun, millisec)
+			})
+		</script>
+	</body>
+</html>
